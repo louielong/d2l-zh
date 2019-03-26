@@ -1,17 +1,25 @@
 FROM ubuntu:16.04
 
 # install python and conda
-RUN apt-get update && apt-get install -y python3 git wget bzip2 
-RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
-     bash Miniconda3-latest-Linux-x86_64.sh -b
+# to accelerate ubuntu apt source
+#RUN sed -i "s/archive\.ubuntu\.com/mirrors\.163\.com/g" /etc/apt/sources.list && \
+#	sed -i "s/security\.ubuntu\.com/mirrors\.163\.com/g" /etc/apt/sources.list
+RUN	apt-get update && apt-get install -y python3 git wget bzip2 vim && \
+	rm -rf /var/lib/apt/lists/* && \
+	wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+    bash Miniconda3-latest-Linux-x86_64.sh -b
 ENV PATH /root/miniconda3/bin:$PATH
 
 # install deps
 COPY environment.yml /
-RUN conda env create -f environment.yml
+# set tsinghua conda and pip mirrors
+#RUN conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/ && \
+#	conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/ && \
+#	pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+RUN	conda env create -f environment.yml
 
 # source activate need bash
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+RUN ln -fs /bin/bash /bin/sh
 
 # setup notedown
 RUN source activate gluon && \
@@ -23,8 +31,8 @@ RUN source activate gluon && \
 EXPOSE 8888
 
 # copy notebooks
-RUN  mkdir /gluon-tutorials-zh
-COPY / /gluon-tutorials-zh/
+RUN  mkdir /root/d2l-zh
+COPY / /root/d2l-zh/
 
 # sanity check
 # RUN source activate gluon && notedown --run /gluon-tutorials-zh/chapter_crashcourse/ndarray.md
@@ -32,5 +40,18 @@ COPY / /gluon-tutorials-zh/
 # for chinese supports
 ENV LANG C.UTF-8
 
-CMD source activate gluon && cd /gluon-tutorials-zh && \
-    jupyter notebook --ip=0.0.0.0 --allow-root
+# for user massage
+RUN echo $'\n*# To activate this environment, use:\n\
+*# > source activate gluon\n\
+*#\n\
+*# To deactivate an active environment, use:\n\
+*# > source deactivate\n\
+*#\n\
+*# To get notebook token\n\
+*# > jupyter notebook list\n'\
+>> /etc/motd
+RUN echo '[ ! -z "$TERM" -a -r /etc/motd ] && cat /etc/motd' >> /root/.bashrc && \
+    ln -fs /root/d2l-zh/.vimrc /root/.vimrc
+
+CMD source activate gluon && \
+    jupyter notebook --ip=0.0.0.0 --allow-root --notebook-dir /root/d2l-zh/
