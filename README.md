@@ -33,7 +33,7 @@ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 
 
 
-##**激活gluon环境**
+## 激活gluon环境
 
 登录容器后，按照提示使用`source activate gluon`激活`gluon`环境，通过`jupyter notebook list`命令查看`token`
 
