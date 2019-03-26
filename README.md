@@ -1,6 +1,6 @@
 # 动手学深度学习
 
-[![Build Status](http://ci.d2l.ai/job/zh/job/master/badge/icon)](http://ci.d2l.ai/job/zh/job/master/)  
+[![Build Status](http://ci.d2l.ai/job/zh/job/master/badge/icon)](http://ci.d2l.ai/job/zh/job/master/)
 
 ## Docker 镜像
 
@@ -28,12 +28,12 @@ sed -i "s/security\.ubuntu\.com/mirrors\.163\.com/g" /etc/apt/sources.list
 
 conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
 conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
-pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple   
+pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 ```
 
 
 
-##激活gluon环境**
+##**激活gluon环境**
 
 登录容器后，按照提示使用`source activate gluon`激活`gluon`环境，通过`jupyter notebook list`命令查看`token`
 
