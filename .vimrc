@@ -1,4 +1,4 @@
-et nu
+set nu
 set tabstop=4
 set colorcolumn=80
 set ch=2
